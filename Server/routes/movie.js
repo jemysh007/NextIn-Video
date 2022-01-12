@@ -8,7 +8,7 @@ router.get("/", function (req, res) {
 
 router.get("/all", MovieController.getAll);
 
-router.get("/add", MovieController.add);
+router.post("/add", MovieController.add);
 
 router.get("/update", MovieController.update);
 
