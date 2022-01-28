@@ -4,26 +4,26 @@ const moment = require("moment");
 console.log("Hello", moment().unix());
 
 const MovieSchema = new Schema({
-  name: String,
-  shortDesc: String,
-  duration: String,
-  ratedFor: Number,
+  name: { type: "string", default: null },
+  short_desc: { type: "string", default: null },
+  duration: Number,
+  rated_for: { type: "string", default: null },
   imdb: Number,
-  releaseYear: Number,
-  availableIn: [String],
-  banner: String,
-  movie_source: String,
-  trailer_source: String,
+  release_year: Number,
+  available_in: [String],
+  banner: { type: "string", default: null },
+  movie_source: { type: "string", default: null },
+  trailer_source: { type: "string", default: null },
   genre: [String],
   date: {
-    type: String,
+    type: Date,
     default: Date.now,
   },
   timestamp: {
     type: Number,
-    default: moment().unix,
+    default: 0,
   },
   keywords: [String],
 });
 
-module.export = mongoose.model("movie", MovieSchema);
+module.exports = mongoose.model("movie", MovieSchema);

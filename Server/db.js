@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 
-const mongoURI =
-  "mongodb+srv://jemish:jemish@NextIn@cluster0.mnwum.mongodb.net/nextinvideo?retryWrites=true&w=majority";
+const mongoURI = "mongodb://localhost:27017/nextinvideo";
 const db = () => {
-  mongoose.createConnection(mongoURI, () => {
+  mongoose.connect(mongoURI, () => {
     console.log("MongoDB Connected Successfully");
   });
 };
