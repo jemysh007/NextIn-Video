@@ -11,6 +11,8 @@ router.get("/all", MovieController.getAll);
 
 router.post("/add", MovieController.add);
 
+router.get("/stream/:choice/:movie_id", MovieController.getStream);
+
 router.get("/update", MovieController.update);
 
 router.get("/delete", MovieController.delete);

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const moment = require("moment");
-console.log("Hello", moment().unix());
+// console.log("Hello"s, moment().unix());
 
 const MovieSchema = new Schema({
   name: { type: "string", default: null },

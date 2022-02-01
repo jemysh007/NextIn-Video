@@ -5,8 +5,13 @@ var path = require("path");
 const moment = require("moment");
 var Ffmpeg = require("fluent-ffmpeg");
 
-exports.getAll = (req, res) => {
-  res.send("All Movie Data");
+exports.getAll = async (req, res) => {
+  let moviedata = await Movie.find();
+  if (moviedata) {
+    res.send(SEND("Movie Data Found", moviedata));
+  } else {
+    res.status(400).json(SEND("No Movie Data Found"));
+  }
 };
 
 const SEND = (msg = "Invalid Requst", data = []) => {
@@ -42,100 +47,108 @@ exports.add = async (req, res) => {
               ) {
                 if (!Check.isBlank(genre) && Check.isString(genre)) {
                   if (!Check.isBlank(keywords) && Check.isString(keywords)) {
-                    // Text Validated
+                    const isExistMovie = await Movie.findOne({
+                      name: movie_name,
+                    });
+                    if (!isExistMovie) {
+                      if (req.files && Object.keys(req.files).length > 0) {
+                        if (req.files.banner) {
+                          if (req.files.trailer_source) {
+                            if (req.files.movie_source) {
+                              // Uploaded Movie banner, Trailer and Movie File Validated
+                              let uploadPath = "./public/movie/" + movie_name;
+                              if (!fs.existsSync(uploadPath)) {
+                                fs.mkdirSync(uploadPath);
+                              }
 
-                    if (req.files && Object.keys(req.files).length > 0) {
-                      if (req.files.banner) {
-                        if (req.files.trailer_source) {
-                          if (req.files.movie_source) {
-                            // Uploaded Movie banner, Trailer and Movie File Validated
-                            let uploadPath = "./public/movie/" + movie_name;
-                            if (!fs.existsSync(uploadPath)) {
-                              fs.mkdirSync(uploadPath);
+                              let { banner, movie_source, trailer_source } =
+                                req.files;
+                              let bannerExt = path.extname(banner.name);
+                              let movie_sourceExt = path.extname(
+                                movie_source.name
+                              );
+                              let tailer_sourceExt = path.extname(
+                                trailer_source.name
+                              );
+                              let banneruploadPath =
+                                movie_name + " Banner" + bannerExt;
+                              let movieuploadPath =
+                                movie_name + movie_sourceExt;
+                              let traileruploadPath =
+                                movie_name + " Tailer" + movie_sourceExt;
+
+                              banner.mv(
+                                uploadPath + "/" + banneruploadPath,
+                                function (err) {
+                                  if (err) {
+                                    res.status(400).json(SEND(err));
+                                  }
+                                  console.log("Movie Banner uploaded");
+                                }
+                              );
+                              movie_source.mv(
+                                uploadPath + "/" + movieuploadPath,
+                                function (err) {
+                                  if (err) {
+                                    res.status(400).json(SEND(err));
+                                  }
+                                  console.log("Movie File Uploaded");
+                                }
+                              );
+                              trailer_source.mv(
+                                uploadPath + "/" + traileruploadPath,
+                                function (err) {
+                                  if (err) {
+                                    res.status(400).json(SEND(err));
+                                  }
+                                  console.log("Movie Trailer Uploaded");
+                                }
+                              );
+
+                              let insData = {
+                                name: movie_name,
+                                short_desc,
+                                duration,
+                                rated_for,
+                                imdb,
+                                release_year,
+                                available_in: available_in.split(","),
+                                genre: genre.split(","),
+                                keywords: keywords.split(","),
+                                timestamp: moment().unix(),
+                                banner: banneruploadPath,
+                                movie_source: movieuploadPath,
+                                trailer_source: traileruploadPath,
+                              };
+
+                              let addMovie = await Movie.create(insData);
+                              res.send(SEND("Movie Added Successfully"));
+                            } else {
+                              res
+                                .status(400)
+                                .json(SEND("Please Upload Movie Source"));
                             }
-
-                            let { banner, movie_source, trailer_source } =
-                              req.files;
-                            let bannerExt = path.extname(banner.name);
-                            let movie_sourceExt = path.extname(
-                              movie_source.name
-                            );
-                            let tailer_sourceExt = path.extname(
-                              trailer_source.name
-                            );
-                            let banneruploadPath =
-                              movie_name + " Banner" + bannerExt;
-                            let movieuploadPath = movie_name + movie_sourceExt;
-                            let taileruploadPath =
-                              movie_name + " Tailer" + movie_sourceExt;
-
-                            banner.mv(
-                              uploadPath + "/" + banneruploadPath,
-                              function (err) {
-                                if (err) {
-                                  res.status(400).json(SEND(err));
-                                }
-                                console.log("Movie Banner uploaded");
-                              }
-                            );
-                            movie_source.mv(
-                              uploadPath + "/" + movieuploadPath,
-                              function (err) {
-                                if (err) {
-                                  res.status(400).json(SEND(err));
-                                }
-                                console.log("Movie File Uploaded");
-                              }
-                            );
-                            trailer_source.mv(
-                              uploadPath + "/" + taileruploadPath,
-                              function (err) {
-                                if (err) {
-                                  res.status(400).json(SEND(err));
-                                }
-                                console.log("Movie Trailer Uploaded");
-                              }
-                            );
-
-                            let insData = {
-                              name: movie_name,
-                              short_desc,
-                              duration,
-                              rated_for,
-                              imdb,
-                              release_year,
-                              available_in,
-                              genre,
-                              keywords,
-                              timestamp: moment().unix(),
-                            };
-
-                            let addMovie = await Movie.create(insData);
-
-                            res.send(addMovie);
                           } else {
                             res
                               .status(400)
-                              .json(SEND("Please Upload Movie Source"));
+                              .json(SEND("Please Upload Movie File"));
                           }
                         } else {
                           res
                             .status(400)
-                            .json(SEND("Please Upload Movie File"));
+                            .json(SEND("Please Upload Movie Banner"));
                         }
                       } else {
                         res
                           .status(400)
-                          .json(SEND("Please Upload Movie Banner"));
+                          .json(
+                            SEND(
+                              "Please Upload Movie Banner, Movie Trailer and Movie File Correctly"
+                            )
+                          );
                       }
                     } else {
-                      res
-                        .status(400)
-                        .json(
-                          SEND(
-                            "Please Upload Movie Banner, Movie Trailer and Movie File Correctly"
-                          )
-                        );
+                      res.status(400).json(SEND("Movie already exists"));
                     }
                   } else {
                     res
@@ -172,6 +185,54 @@ exports.add = async (req, res) => {
   }
 };
 
+exports.getStream = async (req, res) => {
+  let { movie_id, choice } = req.params;
+  console.log(movie_id, choice);
+  const range = req.headers.range;
+  if (!range) {
+    res.status(400).send("Requires Range header");
+  }
+  const getMovie = await Movie.findOne({ _id: movie_id });
+  if (getMovie) {
+    // console.log(getMovie);
+    let videoPath;
+    if (choice == "movie") {
+      videoPath =
+        "./public/movie/" + getMovie.name + "/" + getMovie.movie_source;
+    } else {
+      videoPath =
+        "./public/movie/" + getMovie.name + "/" + getMovie.trailer_source;
+    }
+    // const videoPath = "./public/movie/Iron Man/Iron Man.mp4";
+    const videoSize = fs.statSync(videoPath).size;
+
+    // Parse Range
+    // Example: "bytes=32324-"
+    const CHUNK_SIZE = 10 ** 6; // 1MB
+    const start = Number(range.replace(/\D/g, ""));
+    const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
+
+    // Create headers
+    const contentLength = end - start + 1;
+    const headers = {
+      "Content-Range": `bytes ${start}-${end}/${videoSize}`,
+      "Accept-Ranges": "bytes",
+      "Content-Length": contentLength,
+      "Content-Type": "video/mp4",
+    };
+
+    // HTTP Status 206 for Partial Content
+    res.writeHead(206, headers);
+
+    // create video read stream for this particular chunk
+    const videoStream = fs.createReadStream(videoPath, { start, end });
+
+    // Stream the video chunk to the client
+    videoStream.pipe(res);
+  } else {
+    res.status(400).send("Movie Not Found");
+  }
+};
 exports.update = (req, res) => {
   res.send("Update a Movie");
 };
