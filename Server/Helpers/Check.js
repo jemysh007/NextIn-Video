@@ -27,6 +27,9 @@ module.exports = {
   isInLimit(val, min, max) {
     return val >= min && val <= max;
   },
+  removeSpechars(val) {
+    val.replace(/[^\w\s]/gi, "");
+  },
   isStrongPassword(pass) {
     const re = /^(?=.{8,}$)(?=.*[A-Za-z])(?=.*[0-9])(?=.*\W).*$/;
     return re.test(pass);

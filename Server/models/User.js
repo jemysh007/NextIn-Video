@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const moment = require("moment");
 
 const Userschema = new Schema({
   email: String,
@@ -11,7 +10,7 @@ const Userschema = new Schema({
   },
   timestamp: {
     type: Number,
-    default: moment().unix,
+    default: 0,
   },
 });
 

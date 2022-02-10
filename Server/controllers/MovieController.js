@@ -5,21 +5,46 @@ var path = require("path");
 const moment = require("moment");
 var Ffmpeg = require("fluent-ffmpeg");
 
-exports.getAll = async (req, res) => {
-  let moviedata = await Movie.find();
-  if (moviedata) {
-    res.send(SEND("Movie Data Found", moviedata));
-  } else {
-    res.status(400).json(SEND("No Movie Data Found"));
-  }
-};
-
 const SEND = (msg = "Invalid Requst", data = []) => {
   formottedData = {
     msg: msg,
     data: data,
   };
   return formottedData;
+};
+
+exports.getAll = async (req, res) => {
+  let { start, length, date_filter } = req.body;
+  console.log(req.body);
+  length = !length ? 10 : length;
+  start = !start ? 0 : start;
+  let total_records = await Movie.countDocuments({});
+  let filter = {};
+  if (date_filter) {
+    if (date_filter.start != "" && date_filter.end != "") {
+      if (
+        parseFloat(date_filter.start) > 0 &&
+        parseFloat(date_filter.end) > 0
+      ) {
+      }
+      filter = {
+        $and: [
+          { timestamp: { $gte: parseFloat(date_filter.start) } },
+          { timestamp: { $lte: parseFloat(date_filter.end) } },
+        ],
+      };
+    }
+  }
+
+  let moviedata = await Movie.find(filter)
+    .limit(length)
+    .skip(start)
+    .sort({ timestamp: -1 });
+  if (moviedata) {
+    res.send(SEND("Movie Data Found", { nodedata: moviedata, total_records }));
+  } else {
+    res.status(400).json(SEND("No Movie Data Found"));
+  }
 };
 
 exports.add = async (req, res) => {
@@ -67,7 +92,7 @@ exports.add = async (req, res) => {
                               let movie_sourceExt = path.extname(
                                 movie_source.name
                               );
-                              let tailer_sourceExt = path.extname(
+                              let trailer_sourceExt = path.extname(
                                 trailer_source.name
                               );
                               let banneruploadPath =
@@ -75,7 +100,7 @@ exports.add = async (req, res) => {
                               let movieuploadPath =
                                 movie_name + movie_sourceExt;
                               let traileruploadPath =
-                                movie_name + " Tailer" + movie_sourceExt;
+                                movie_name + " Trailer" + trailer_sourceExt;
 
                               banner.mv(
                                 uploadPath + "/" + banneruploadPath,
@@ -131,7 +156,7 @@ exports.add = async (req, res) => {
                           } else {
                             res
                               .status(400)
-                              .json(SEND("Please Upload Movie File"));
+                              .json(SEND("Please Upload Trailer Source"));
                           }
                         } else {
                           res
@@ -233,10 +258,45 @@ exports.getStream = async (req, res) => {
     res.status(400).send("Movie Not Found");
   }
 };
+
+exports.getGenres = async (req, res) => {
+  let genres = await Movie.find({}).select("genre -_id");
+  let total_genres = [];
+  genres.forEach((element) => {
+    element.genre.forEach((element2) => {
+      if (!total_genres.includes(element2)) {
+        total_genres.push(element2);
+      }
+    });
+  });
+  res.send(SEND("Genre Data", total_genres));
+};
 exports.update = (req, res) => {
   res.send("Update a Movie");
 };
 
 exports.delete = (req, res) => {
   res.send("Delete a Movie");
+};
+
+exports.getByGenre = async (req, res) => {
+  let { start, length, date_filter, genre } = req.body;
+  let filter = {};
+  length = !length ? 10 : length;
+  start = !start ? 0 : start;
+  let total_records = await Movie.countDocuments({});
+
+  if (genre && genre != "") {
+    filter.genre = { $elemMatch: { $eq: genre } };
+    console.log(filter);
+    let moviedata = await Movie.find(filter);
+
+    if (moviedata) {
+      res.send(SEND("Movie Data Found", moviedata));
+    } else {
+      res.status(400).json(SEND("No Movie Data Found"));
+    }
+  } else {
+    res.status(400).json(SEND("No Movie Data Found"));
+  }
 };

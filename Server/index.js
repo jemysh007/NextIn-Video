@@ -8,6 +8,7 @@ const cors = require("cors");
 
 const port = 3500;
 var movies = require("./Routes/Movie");
+var series = require("./Routes/Series");
 var user = require("./Routes/User");
 
 app.use(express.json());
@@ -23,6 +24,8 @@ var fs = require("fs");
 var ffmpeg = require("fluent-ffmpeg");
 
 app.use("/movie", movies);
+app.use("/series", series);
+
 app.use("/user", user);
 
 app.listen(port, () => {
