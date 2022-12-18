@@ -1,0 +1,452 @@
+{
+	"info": {
+		"_postman_id": "3e57b94c-4a0e-48fe-8ff2-d92ad214ef52",
+		"name": "NextIn Video",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19085561"
+	},
+	"item": [
+		{
+			"name": "Base URL",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}",
+					"host": [
+						"{{base_url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Movie Add",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "movie_name",
+							"value": "The Matrix",
+							"type": "text"
+						},
+						{
+							"key": "short_desc",
+							"value": "When a beautiful stranger leads computer hacker Neo to a forbidding underworld, he discovers the shocking truth--the life he knows is the elaborate deception of an evil cyber-intelligence.",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "120",
+							"type": "text"
+						},
+						{
+							"key": "rated_for",
+							"value": "PG",
+							"type": "text"
+						},
+						{
+							"key": "imdb",
+							"value": "8.7",
+							"type": "text"
+						},
+						{
+							"key": "release_year",
+							"value": "1999",
+							"type": "text"
+						},
+						{
+							"key": "available_in",
+							"value": "English,Hindi",
+							"type": "text"
+						},
+						{
+							"key": "banner",
+							"type": "file",
+							"src": []
+						},
+						{
+							"key": "movie_source",
+							"type": "file",
+							"src": "/C:/Users/Captain/Downloads/Aerial Shot of a Lighthouse.mp4"
+						},
+						{
+							"key": "trailer_source",
+							"type": "file",
+							"src": "/C:/Users/Captain/Downloads/Time Lapse Video Of Clouds During Sunset.mp4"
+						},
+						{
+							"key": "genre",
+							"value": "Super Hero,Action,Science Fiction",
+							"type": "text"
+						},
+						{
+							"key": "keywords",
+							"value": "Starwars,star,wars",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}movie/add",
+					"host": [
+						"{{base_url}}movie"
+					],
+					"path": [
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Stream Video",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}movie/stream/trailer/61f8c374400ffbfebb2d9859",
+					"host": [
+						"{{base_url}}movie"
+					],
+					"path": [
+						"stream",
+						"trailer",
+						"61f8c374400ffbfebb2d9859"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Movies",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"start\" : \"0\",\r\n    \"length\" : \"10\"\r\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}movie/all",
+					"host": [
+						"{{base_url}}movie"
+					],
+					"path": [
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Movie by Genre",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"genre\" : \"Adventure\"\r\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}movie/by-genre",
+					"host": [
+						"{{base_url}}movie"
+					],
+					"path": [
+						"by-genre"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Genres",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}movie/get-genres",
+					"host": [
+						"{{base_url}}movie"
+					],
+					"path": [
+						"get-genres"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Webseries",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"start\" : \"0\",\r\n    \"length\" : \"10\"\r\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}series/all",
+					"host": [
+						"{{base_url}}series"
+					],
+					"path": [
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Series Add",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "series_name",
+							"value": "Lucifer",
+							"type": "text"
+						},
+						{
+							"key": "short_desc",
+							"value": "Based on characters created by Neil Gaiman, Sam Kieth and Mike Dringenberg, this series follows Lucifer, the original fallen angel, who has become dissatisfied with his life in hell. After abandoning his throne and retiring to Los Angeles, Lucifer indulges in his favorite things (women, wine and song) -- until a murder takes place outside of his upscale nightclub. For the first time in billions of years, the murder awakens something unfamiliar in Lucifer's soul that is eerily similar to compassion and sympathy.",
+							"type": "text"
+						},
+						{
+							"key": "rated_for",
+							"value": "18+",
+							"type": "text"
+						},
+						{
+							"key": "imdb",
+							"value": "8.1",
+							"type": "text"
+						},
+						{
+							"key": "release_year",
+							"value": "2017",
+							"type": "text"
+						},
+						{
+							"key": "available_in",
+							"value": "English,Hindi",
+							"type": "text"
+						},
+						{
+							"key": "genre",
+							"value": "Mystery,Fantacy,Comedy,Drama",
+							"type": "text"
+						},
+						{
+							"key": "keywords",
+							"value": "Lucifer,Police,DC",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}series/add",
+					"host": [
+						"{{base_url}}series"
+					],
+					"path": [
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Seasons by Series ID",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"series_id\" : \"6200abbc4b5e227e0c035ddc\"\r\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}series/get-seasons",
+					"host": [
+						"{{base_url}}series"
+					],
+					"path": [
+						"get-seasons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Season Add",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "series_id",
+							"value": "6200abbc4b5e227e0c035ddc",
+							"type": "text"
+						},
+						{
+							"key": "season_name",
+							"value": "Season 1",
+							"type": "text"
+						},
+						{
+							"key": "short_desc",
+							"value": "Eight thieves take hostages and lock themselves in the Royal Mint of Spain as a criminal mastermind manipulates the police to carry out his plan.",
+							"type": "text"
+						},
+						{
+							"key": "banner",
+							"type": "file",
+							"src": "/C:/Users/heyje/Downloads/meritt-thomas-k93GkBA625M-unsplash.jpg"
+						},
+						{
+							"key": "trailer_source",
+							"type": "file",
+							"src": "/C:/Users/heyje/Downloads/Time Lapse Video Of Night Sky.mp4"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}series/add-season",
+					"host": [
+						"{{base_url}}series"
+					],
+					"path": [
+						"add-season"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Episode Add",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "season_id",
+							"value": "6200f248e1653eeeb5a39ab5",
+							"type": "text"
+						},
+						{
+							"key": "episode_title",
+							"value": "Episode 1",
+							"type": "text"
+						},
+						{
+							"key": "short_desc",
+							"value": "The Professor recruits a young female robber and seven other criminals for a grand heist, targeting the Royal Mint of Spain.",
+							"type": "text"
+						},
+						{
+							"key": "video",
+							"type": "file",
+							"src": "/C:/Users/heyje/Downloads/pexels-peter-fowler-6394054.mp4"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}series/add-episode",
+					"host": [
+						"{{base_url}}series"
+					],
+					"path": [
+						"add-episode"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3500/",
+			"type": "string"
+		}
+	]
+}
